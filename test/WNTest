@@ -1,0 +1,200 @@
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+import components.map.Map;
+import components.sequence.Sequence;
+
+public abstract class WordAssociationNetwordTest{
+
+    //private fields
+    Sequence <String> s = new Sequence<String>();
+    s.add("But you cannot pluck the stars from heaven.");
+    s.add("He built an observatory to study the stars.");
+    s.add("For hours she sat gazing the stars.");
+    s.add("The stars were bright in the sky.");
+    s.add("They show about 100,000 star clusters and millions, or even billions, of individual stars.")
+    s.add("He was studying the stars through a telescope.")
+    s.add("The stars were twinkling in the sky.")
+
+    //test defult constructor
+    @Test
+    public void testDefaultConstructor(){
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star");
+
+
+        map<String, set<String>> map = new Map<String, set<String>>();
+        Set<String> set = new Set<String>();
+        map.add("Star", set);
+        assertEquals(wan,map);
+    }
+
+    //test constructor with parameter
+    @Test
+    public void testConstructorWithParameter(){
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Set<String>> map = new Map<>();
+        map.add("Star",s);
+        assertEquals(wan,map);
+    }
+
+    //test addSentence1ToTheEnd
+    @Test
+    public void testAddSentence1(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Set<String>> map = new Map<>();
+        s.add("1");
+        map.add("Star",s);
+        wan.addSentence("1",s.length());
+        assertEquals(wan,map);
+        s.remove(s.length()-1);
+
+    }
+
+    //test addSentenceWithEmptyString
+    @Test
+    public void testAddSentence2(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Set<String>> map = new Map<>();
+        s.add(" ");
+        map.add("Star",s);
+        wan.addSentence(" ",s.length());
+        assertEquals(wan,map);
+        s.remove(s.length()-1);
+
+    }
+
+    //test addSentenceAtTheBeginning
+    @Test
+    public void testAddSentence3(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Set<String>> map = new Map<>();
+        s.add(0,"1");
+        map.add("Star",s);
+        wan.addSentence("1",0);
+        assertEquals(wan,map);
+        s.remove(0);
+
+    }
+
+    //test deleteSentence from the beginning
+    @Test
+    public void testDeleteSentence1(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Set<String>> map = new Map<>();
+        s.remove(0);
+        map.add("Star",s);
+        wan.deleteSentence(0);
+        assertEquals(wan,map);
+        s.add("But you cannot pluck the stars from heaven.");
+
+    }
+
+    //test deleteSentence from the end
+    @Test
+    public void testDeleteSentence2(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Set<String>> map = new Map<>();
+        s.remove(s.length()-1);
+        map.add("Star",s);
+        wan.deleteSentence(s.length()-1);
+        assertEquals(wan,map);
+        s.add("The stars were twinkling in the sky.");
+
+    }
+
+    //test deleteSentence from the middle
+    @Test
+    public void testDeleteSentence3(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Set<String>> map = new Map<>();
+        s.remove(3);
+        map.add("Star",s);
+        wan.deleteSentence(3);
+        assertEquals(wan,map);
+        s.add("The stars were bright in the sky.");
+
+    }
+
+    //test isInNetwork with empty string
+    @Test
+    public void testIsInNetwork1(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        int b = wan.isInNetwork("");
+        assertEquals(b,-1);
+
+    }
+
+    //test isInNetwork with a sentence that is not in the network
+    @Test
+    public void testIsInNetwork2(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        int b = wan.isInNetwork("Moon is light");
+        assertEquals(b,-1);
+
+    }
+
+    //test isInNetwork with a sentence that is in the network
+    @Test
+    public void testIsInNetwork3(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        int b = wan.isInNetwork("The stars were bright in the sky.");
+        assertEquals(b,3);
+
+    }
+
+    //test getAllSentences
+    @Test
+    public void testGetAllSentences(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Sequence<String> s1 = wan.getAllSentences();
+        assertEquals(s1,s);
+
+    }
+
+    //test getAllSentences with empty network
+    @Test
+    public void testGetAllSentences2(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star");
+        Sequence<String> s1 = wan.getAllSentences();
+        Sequence<String> s2 = new Sequence<String>();
+        assertEquals(s1,s2);
+
+    }
+
+    //test totalSentences
+    @Test
+    public void testTotalSentences(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        int b = wan.totalSentences();
+        assertEquals(b,7);
+
+    }
+
+    //test totalSentences with empty network
+    @Test
+    public void testTotalSentences2(){
+
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star");
+        int b = wan.totalSentences();
+        assertEquals(b,0);
+
+    }
+
+
+
+
+
+
+}

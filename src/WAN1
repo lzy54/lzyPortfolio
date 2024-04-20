@@ -1,0 +1,53 @@
+import components.set.Set;
+import components.set.Set1L;
+import components.map.Map;
+import components.map.Map1L;
+import components.simplewriter.SimpleWriter;
+import components.simplewriter.SimpleWriter1L;
+import components.simplereadee.SimpleReader1L;
+import components.sequence.Sequence;
+import components.sequence.Sequence1L;
+
+public class WordAssociationNetwork{
+    public static void main(String[] args){
+        SimpleWriter out = new SimpleWriter1L();
+        SimpleReader1L in = new SimpleReader1L();
+
+        out.println("Enter a word: ");
+        Srting word = in.nextLine();
+        Srting check = "0";
+        Sequence<String> sentences = new Sequence1L<>();
+        while(!check.equals("1")){
+            out.println("Give me a sentence with the word " + word + " in it: ");
+            String sentence = in.nextLine();
+            sentences.add(sentence);
+
+            out.println("Enter 0 if you want to add another sentence or 1 if you want to quit: ");
+            check = in.nextLine();
+        }
+
+        WordAssociationNetwork network = new WordAssociationNetwork(word, sentences);
+
+        out.println("Enter how many words you want to see: ");
+        //didn't checked if it's an integer for clarity
+        int x = in.nextInteger();
+        out.println("Tell me which words you don't want to see: ");
+        String j = "0";
+        Set<String> bannedWords = new Set1L<>();
+        while(!j.equals("1")){
+            String bannedWord = in.nextLine();
+            bannedWords.add(bannedWord);
+
+            out.println("Enter 0 if you want to add another word or 1 if you want to quit: ");
+            j = in.nextLine();
+        }
+
+        Set<String> output = network.getTopXwords(x, bannedWords);
+        out.println("The top " + x + " words are: ");
+        for(String s : output){
+            out.println(s);
+        }
+        in.close();
+        out.close();
+    }
+}

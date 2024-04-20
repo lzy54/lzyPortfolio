@@ -1,0 +1,243 @@
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+import components.map.Map;
+import components.sequence.Sequence;
+
+public abstract class WordAssociationNetwordSecondaryTest{
+
+     //private fields
+     Sequence <String> s = new Sequence<String>();
+     s.add("But you cannot pluck the stars from heaven.");
+     s.add("He built an observatory to study the stars.");
+     s.add("For hours she sat gazing the stars.");
+     s.add("The stars were bright in the sky.");
+     s.add("They show about 100,000 star clusters and millions, or even billions, of individual stars.")
+     s.add("He was studying the stars through a telescope.")
+     s.add("The stars were twinkling in the sky.")
+
+     //test addMultipleSentences
+    @Test
+    public void testAddMultipleSentences1() {
+        Map<String, Sequence<String>> m = new Map<String, Sequence<String>>();
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star");
+        String[] s1 = {"But you cannot pluck the stars from heaven.",
+                      "He built an observatory to study the stars.",
+                      "For hours she sat gazing the stars.",
+                      "The stars were bright in the sky.",
+                      "They show about 100,000 star clusters and millions, or even billions, of individual stars.",
+                      "He was studying the stars through a telescope."};
+
+        wan.addMultipleSentences(s1);
+        m.add("Star", s);
+        assertEquals(m, wan);
+    }
+
+    //test addMultipleSentences with empty string[]
+    @Test
+    public void testAddMultipleSentences2() {
+        Map<String, Sequence<String>> m = new Map<String, Sequence<String>>();
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star");
+        String[] s1 = {};
+
+        Sequence<String> s2 = new Sequence<String>();
+        m.add("Star", s2);
+        wan.addMultipleSentences(s1);
+        assertEquals(m, wan);
+
+    }
+
+    //test clearWordData remove all the sentences that contain the word "sky"
+    @Test
+    public void testClearWordData1() {
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Set<String> s1 = wan.clearWordData("sky");
+        Set<String> s2 = new Set<String>();
+        s2.add("The stars were bright in the sky.");
+        s2.add("The stars were twinkling in the sky.");
+
+        Map<String, Sequence<String>> m = new Map<>();
+        Sequence<String> s3 = new Sequence<String>();
+        s3.add("But you cannot pluck the stars from heaven.");
+        s3.add("He built an observatory to study the stars.");
+        s3.add("For hours she sat gazing the stars.");
+        s3.add("They show about 100,000 star clusters and millions, or even billions, of individual stars.");
+        s3.add("He was studying the stars through a telescope.");
+        m.add("Star", s3);
+
+        //check if the sentences that contain the word "sky" are removed
+        assertEquals(s2, s1);
+        //check if wan is updated
+        assertEquals(m, wan);
+    }
+
+    //test clearWordData
+    //removed word is not in all sentences
+    @Test
+    public void testClearWordData2() {
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Set<String> s1 = wan.clearWordData("observatorys");
+        //noting should be removed
+
+        Map<String, Sequence<String>> m = new Map<>();
+        m.add("Star", s);
+        assertEquals(m, wan);
+    }
+
+    //test getSentences
+    @Test
+    public void testGetSentences1() {
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Sequence<String>> m = new Map<>();
+        m.add("Star", s);
+
+        //noting should be removed, just return qulified sentences
+        Set<String> s1 = wan.getSentences("sky");
+
+        Set<String> s2 = new Set<String>();
+        s2.add("The stars were bright in the sky.");
+        s2.add("The stars were twinkling in the sky.");
+
+
+
+        assertEquals(s2, s1);
+        assertEquals(m, wan);
+
+
+    }
+
+    //test getSentences
+    @Test
+    public void testGetSentences2() {
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Sequence<String>> m = new Map<>();
+        m.add("Star", s);
+
+        //noting should be changed and return empty set
+        Set<String> s1 = wan.getSentences("observatorys");
+
+        Set<String> s2 = new Set<String>();
+
+        assertEquals(s2, s1);
+        assertEquals(m, wan);
+    }
+
+    //test getNumSentences
+    @Test
+    public void testGetNumSentences1() {
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Sequence<String>> m = new Map<>();
+        m.add("Star", s);
+
+        //noting should be changed and return 2
+        int i = wan.getNumSentences("sky");
+
+        assertEquals(2, i);
+        assertEquals(m, wan);
+    }
+
+    //test getNumSentences return 0
+    @Test
+    public void testGetNumSentences2() {
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Sequence<String>> m = new Map<>();
+        m.add("Star", s);
+
+        //noting should be changed and return 0
+        int i = wan.getNumSentences("observatorys");
+
+        assertEquals(0, i);
+        assertEquals(m, wan);
+    }
+
+    //test getTopXwords with x = 2
+    @Test
+    public void testGetTopXwords1() {
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Sequence<String>> m = new Map<>();
+        m.add("Star", s);
+        Set<String> commonWords = new Set<String>();
+        commonWords.add("star");
+        commonWords.add("stars");
+        commonWords.add("in");
+        commonWords.add("go");
+        commonWords.add("he");
+        commonWords.add("was");
+        commonWords.add("were");
+        commonWords.add("and");
+        commonWords.add("or");
+        commonWords.add("even");
+        commonWords.add("she");
+
+        //noting should be changed and return 4 words with highest frequency
+        Set<String> s1 = wan.getTopXwords(2, commonWords);
+        Set<String> s2 = new Set<String>();
+        s2.add("the");
+        s2.add("sky");
+
+        assertEquals(s2, s1);
+        assertEquals(m, wan);
+    }
+
+    //test equals
+    @Test
+    public void testEquals1() {
+        WordAssociationNetwork wan1 = new WordAssociationNetwork("Star",s);
+        WordAssociationNetwork wan2 = new WordAssociationNetwork("Star",s);
+
+        //noting should be changed and return true
+        boolean b = wan1.equals(wan2);
+
+        assertEquals(true, b);
+    }
+
+    //test equals
+    @Test
+    public void testEquals2() {
+        WordAssociationNetwork wan1 = new WordAssociationNetwork("Star",s);
+        WordAssociationNetwork wan2 = new WordAssociationNetwork("Star");
+
+        //noting should be changed and return true
+        boolean b = wan1.equals(wan2);
+
+        assertEquals(false, b);
+    }
+
+    //test toString
+    @Test
+    public void testToString1() {
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star",s);
+        Map<String, Sequence<String>> m = new Map<>();
+        m.add("Star", s);
+
+        //noting should be changed and return the string representation of wan
+        String s1 = wan.toString();
+        String s2 = "This word contains 7 sentences: \n" + "But you cannot pluck the stars from heaven.\n" +
+                    "He built an observatory to study the stars.\n" +
+                    "For hours she sat gazing the stars.\n" +
+                    "The stars were bright in the sky.\n" +
+                    "They show about 100,000 star clusters and millions, or even billions, of individual stars.\n" +
+                    "He was studying the stars through a telescope.\n" +"The stars were twinkling in the sky.\n";
+
+        assertEquals(s2, s1);
+        assertEquals(m, wan);
+    }
+
+    //test toString with empty sentences
+    @Test
+    public void testToString2() {
+        WordAssociationNetwork wan = new WordAssociationNetwork("Star");
+        Map<String, Sequence<String>> m = new Map<>();
+        Sequence<String> s1 = new Sequence<String>();
+        m.add("Star", s1);
+
+        //noting should be changed and return the string representation of wan
+        String s2 = wan.toString();
+        String s3 = "This word contains 0 sentences: \n";
+
+        assertEquals(s3, s2);
+        assertEquals(m, wan);
+    }
+
+}
+

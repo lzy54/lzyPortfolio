@@ -1,0 +1,41 @@
+import components.set.Set;
+import components.set.Set1L;
+import components.sequence.Sequence;
+import components.sequence.Sequence1L;
+
+public class TagCloudGenerator{
+
+    //the Set would include all sentences in the text file
+    private Set<String> sentences = new Set1L<>();
+
+    //the Set would include all ignored words in the text file
+    private Set<String> commonWords = new Set1L<>();
+
+    /*
+     *   ....... leave out the set up part and
+     *           the content of in-class project TagCloudGenerator2
+     *
+     *           the in-class TagGenerator is finding words with the highest frequency
+     *           TagCloudGenerator2 using wordAssociationNetwork to find
+     *           words associated with a given word most;
+     *
+     *
+     *
+     */
+    private WordAssociationNetwork network = new WordAssociationNetwork("star",sentences);
+
+    public static void main(String[] args){
+        out.println("Enter the name of the file: ");
+        String fileName = in.nextLine();
+        TagCloudGenerator generator = new TagCloudGenerator(fileName);
+
+        network.getTopXwords(5,commonWords)
+
+
+        //generate the tag cloud with the data in the network
+        generator.displayTagCloud(network);
+
+
+
+    }
+}
